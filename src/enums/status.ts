@@ -1,0 +1,5 @@
+export enum Status {
+    PENDIENTE = "PENDIENTE",
+    EN_PROGRESO = "EN_PROGRESO",
+    COMPLETADO = "COMPLETADO",
+}
