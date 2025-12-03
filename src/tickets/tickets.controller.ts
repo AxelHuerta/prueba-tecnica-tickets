@@ -1,10 +1,10 @@
 import { Body, Controller, Delete, Get, Post, Put } from "@nestjs/common";
 import Ticket from "src/models/ticket";
-import { TicketService } from "src/services/ticket.service";
+import { TicketsService } from "src/tickets/tickets.service";
 
 @Controller("tickets")
-export class TicketController {
-    constructor(private readonly ticketService: TicketService) {}
+export class TicketsController {
+    constructor(private readonly ticketService: TicketsService) {}
 
     @Get()
     findAll() {

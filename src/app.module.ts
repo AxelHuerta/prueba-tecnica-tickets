@@ -1,5 +1,8 @@
 import { Module } from "@nestjs/common";
 import { SequelizeModule } from "@nestjs/sequelize";
+import { TicketsModule } from "./tickets/tickets.module";
+import { TicketsService } from "./tickets/tickets.service";
+import { TicketsController } from "./tickets/tickets.controller";
 
 @Module({
   imports: [
@@ -12,6 +15,9 @@ import { SequelizeModule } from "@nestjs/sequelize";
       database: "test",
       models: [],
     }),
+    TicketsModule,
   ],
+  providers: [TicketsService],
+  controllers: [TicketsController],
 })
 export class AppModule {}

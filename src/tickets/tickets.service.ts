@@ -3,7 +3,7 @@ import { Status } from "src/enums/status";
 import Ticket from "src/models/ticket";
 
 @Injectable()
-export class TicketService {
+export class TicketsService {
     getTickets() {
         return Ticket.findAll();
     }
