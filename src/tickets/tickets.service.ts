@@ -14,29 +14,29 @@ export class TicketsService {
         });
     }
 
-    tickets() {
-        return this.prisma.ticket.findMany();
+    tickets(userId: number) {
+        return this.prisma.ticket.findMany({ where: { userId } });
     }
 
     createTicket(data: Prisma.TicketCreateInput): Promise<Ticket> {
         return this.prisma.ticket.create({ data });
     }
 
-    updateTicket(id: number, data: Prisma.TicketUpdateInput) {
+    updateTicket(id: number, data: Prisma.TicketUpdateInput, userId: number) {
         return this.prisma.ticket.update({
-            where: { id },
+            where: { id, userId },
             data,
         });
     }
 
-    updateStatus(id: number, estatus: Status) {
+    updateStatus(id: number, estatus: Status, userId: number) {
         return this.prisma.ticket.update({
-            where: { id },
+            where: { id, userId },
             data: { estatus },
         });
     }
 
-    deleteTicket(id: number) {
-        return this.prisma.ticket.delete({ where: { id } });
+    deleteTicket(id: number, userId: number) {
+        return this.prisma.ticket.delete({ where: { id, userId } });
     }
 }

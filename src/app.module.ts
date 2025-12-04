@@ -6,6 +6,7 @@ import { TicketsController } from "./tickets/tickets.controller";
 import { PrismaService } from "./prisma.service";
 import { PrismaModule } from "./prisma.module";
 import { UsersModule } from './users/users.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { UsersModule } from './users/users.module';
     TicketsModule,
     ConfigModule.forRoot(),
     UsersModule,
+    AuthModule,
   ],
   providers: [TicketsService, PrismaService],
   controllers: [TicketsController],
