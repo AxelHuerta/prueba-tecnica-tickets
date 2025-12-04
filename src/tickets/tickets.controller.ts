@@ -1,4 +1,13 @@
-import { Body, Controller, Delete, Get, Post, Put } from "@nestjs/common";
+import {
+    Body,
+    Controller,
+    Delete,
+    Get,
+    Param,
+    Patch,
+    Post,
+    Put,
+} from "@nestjs/common";
 import { Prisma, Status } from "generated/prisma/client";
 import { TicketsService } from "src/tickets/tickets.service";
 
@@ -43,11 +52,18 @@ export class TicketsController {
     @Put(":id")
     async update(
         @Body() ticketData: Prisma.TicketUpdateInput,
-        @Body("id") id: number,
+        @Param("id") id: string,
     ) {
         try {
+            const idNumber = Number(id);
+            if (Number.isNaN(idNumber)) {
+                return {
+                    status: "error",
+                    data: "El ID proporcionado no es un número válido.",
+                };
+            }
             const updatedTicket = await this.ticketService.updateTicket(
-                id,
+                idNumber,
                 ticketData,
             );
             return {
@@ -62,15 +78,26 @@ export class TicketsController {
         }
     }
 
-    @Put(":id/status")
-    async updateStatus(@Body("id") id: number, @Body() estatus: Status) {
+    @Patch(":id/status")
+    async updateStatus(
+        @Param("id") id: string,
+        @Body("estatus") estatus: Status,
+    ) {
         if (!estatus) {
             return { status: "error", data: "El estatus es requerido." };
         }
 
+        const idNumber = Number(id);
+        if (Number.isNaN(idNumber)) {
+            return {
+                status: "error",
+                data: "El ID proporcionado no es un número válido.",
+            };
+        }
+
         try {
             const updatedStatusTicket = await this.ticketService.updateStatus(
-                id,
+                idNumber,
                 estatus,
             );
             return {
@@ -86,9 +113,19 @@ export class TicketsController {
     }
 
     @Delete(":id")
-    async delete(@Body("id") id: number) {
+    async delete(@Param("id") id: string) {
+        const idNumber = Number(id);
+        if (Number.isNaN(idNumber)) {
+            return {
+                status: "error",
+                data: "El ID proporcionado no es un número válido.",
+            };
+        }
+
         try {
-            const deletedTicket = await this.ticketService.deleteTicket(id);
+            const deletedTicket = await this.ticketService.deleteTicket(
+                idNumber,
+            );
             return {
                 status: "ok",
                 data: deletedTicket,
