@@ -1,4 +1,5 @@
 import { Module } from "@nestjs/common";
+import { ConfigModule } from "@nestjs/config";
 import { TicketsModule } from "./tickets/tickets.module";
 import { TicketsService } from "./tickets/tickets.service";
 import { TicketsController } from "./tickets/tickets.controller";
@@ -9,6 +10,7 @@ import { PrismaModule } from "./prisma.module";
   imports: [
     PrismaModule,
     TicketsModule,
+    ConfigModule.forRoot(),
   ],
   providers: [TicketsService, PrismaService],
   controllers: [TicketsController],
