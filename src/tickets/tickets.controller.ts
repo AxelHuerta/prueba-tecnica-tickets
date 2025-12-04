@@ -40,15 +40,15 @@ export class TicketsController {
     async create(@Body() ticketData: Prisma.TicketCreateInput, @Request() req) {
         try {
             const userId = Number(req.user.sub);
-            
+
             // Asignar el userId del token al ticket
             const ticketWithUser = {
                 ...ticketData,
                 user: {
-                    connect: { id: userId }
-                }
+                    connect: { id: userId },
+                },
             };
-            
+
             const createdTicket = await this.ticketService.createTicket(
                 ticketWithUser,
             );
