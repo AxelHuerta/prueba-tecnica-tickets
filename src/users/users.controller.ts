@@ -12,7 +12,11 @@ export class UsersController {
       const createdUser = await this.usersService.create(userData);
       return {
         status: "ok",
-        data: createdUser,
+        data: {
+          id: createdUser.id,
+          email: createdUser.email,
+          name: createdUser.name,
+        },
       };
     } catch (error) {
       return {
