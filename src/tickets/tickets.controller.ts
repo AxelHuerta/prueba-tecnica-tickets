@@ -1,5 +1,5 @@
 import { Body, Controller, Delete, Get, Post, Put } from "@nestjs/common";
-import Ticket from "src/models/ticket";
+import { Prisma, Status } from "generated/prisma/client";
 import { TicketsService } from "src/tickets/tickets.service";
 
 @Controller("tickets")
@@ -7,16 +7,13 @@ export class TicketsController {
     constructor(private readonly ticketService: TicketsService) {}
 
     @Get()
-    findAll() {
+    async findAll() {
         try {
-            const getTickets = async () => {
-                return {
-                    status: "ok",
-                    data: await this.ticketService.getTickets(),
-                };
+            const getTickets = await this.ticketService.tickets();
+            return {
+                status: "ok",
+                data: getTickets,
             };
-
-            getTickets();
         } catch (error) {
             return {
                 status: "error",
@@ -26,11 +23,14 @@ export class TicketsController {
     }
 
     @Post()
-    create(@Body() ticketData: Partial<Ticket>) {
+    async create(@Body() ticketData: Prisma.TicketCreateInput) {
         try {
+            const createdTicket = await this.ticketService.createTicket(
+                ticketData,
+            );
             return {
                 status: "ok",
-                data: this.ticketService.createTicket(ticketData),
+                data: createdTicket,
             };
         } catch (error) {
             return {
@@ -41,11 +41,18 @@ export class TicketsController {
     }
 
     @Put(":id")
-    update(@Body() ticketData: Partial<Ticket>, @Body("id") id: number) {
+    async update(
+        @Body() ticketData: Prisma.TicketUpdateInput,
+        @Body("id") id: number,
+    ) {
         try {
+            const updatedTicket = await this.ticketService.updateTicket(
+                id,
+                ticketData,
+            );
             return {
                 status: "ok",
-                data: this.ticketService.updateTicket(id, ticketData),
+                data: updatedTicket,
             };
         } catch (error) {
             return {
@@ -56,15 +63,19 @@ export class TicketsController {
     }
 
     @Put(":id/status")
-    updateStatus(@Body() ticketData: Partial<Ticket>, @Body("id") id: number) {
-        if (!ticketData.estatus) {
+    async updateStatus(@Body("id") id: number, @Body() estatus: Status) {
+        if (!estatus) {
             return { status: "error", data: "El estatus es requerido." };
         }
 
         try {
+            const updatedStatusTicket = await this.ticketService.updateStatus(
+                id,
+                estatus,
+            );
             return {
                 status: "ok",
-                data: this.ticketService.updateStatus(id, ticketData.estatus),
+                data: updatedStatusTicket,
             };
         } catch (error) {
             return {
@@ -75,11 +86,12 @@ export class TicketsController {
     }
 
     @Delete(":id")
-    delete(@Body("id") id: number) {
+    async delete(@Body("id") id: number) {
         try {
+            const deletedTicket = await this.ticketService.deleteTicket(id);
             return {
                 status: "ok",
-                data: this.ticketService.deleteTicket(id),
+                data: deletedTicket,
             };
         } catch (error) {
             return {

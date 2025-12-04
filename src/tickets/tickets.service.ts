@@ -1,26 +1,42 @@
 import { Injectable } from "@nestjs/common";
-import { Status } from "src/enums/status";
-import Ticket from "src/models/ticket";
+import { Prisma, Status, Ticket } from "generated/prisma/client";
+import { PrismaService } from "src/prisma.service";
 
 @Injectable()
 export class TicketsService {
-    getTickets() {
-        return Ticket.findAll();
+    constructor(private readonly prisma: PrismaService) {}
+
+    async ticket(
+        ticketWhereUniqueInput: Prisma.TicketWhereUniqueInput,
+    ): Promise<Ticket | null> {
+        return this.prisma.ticket.findUnique({
+            where: ticketWhereUniqueInput,
+        });
     }
 
-    createTicket(data: Partial<Ticket>) {
-        return Ticket.create(data);
+    tickets() {
+        return this.prisma.ticket.findMany();
     }
 
-    updateTicket(id: number, data: Partial<Ticket>) {
-        return Ticket.update(data, { where: { id } });
+    createTicket(data: Prisma.TicketCreateInput): Promise<Ticket> {
+        return this.prisma.ticket.create({ data });
+    }
+
+    updateTicket(id: number, data: Prisma.TicketUpdateInput) {
+        return this.prisma.ticket.update({
+            where: { id },
+            data,
+        });
     }
 
     updateStatus(id: number, estatus: Status) {
-        return Ticket.update({ estatus }, { where: { id } });
+        return this.prisma.ticket.update({
+            where: { id },
+            data: { estatus },
+        });
     }
 
     deleteTicket(id: number) {
-        return Ticket.destroy({ where: { id } });
+        return this.prisma.ticket.delete({ where: { id } });
     }
 }
