@@ -1,23 +1,16 @@
 import { Module } from "@nestjs/common";
-import { SequelizeModule } from "@nestjs/sequelize";
 import { TicketsModule } from "./tickets/tickets.module";
 import { TicketsService } from "./tickets/tickets.service";
 import { TicketsController } from "./tickets/tickets.controller";
+import { PrismaService } from "./prisma.service";
+import { PrismaModule } from "./prisma.module";
 
 @Module({
   imports: [
-    SequelizeModule.forRoot({
-      dialect: "mysql",
-      host: "localhost",
-      port: 3306,
-      username: "root",
-      password: "root",
-      database: "test",
-      models: [],
-    }),
+    PrismaModule,
     TicketsModule,
   ],
-  providers: [TicketsService],
+  providers: [TicketsService, PrismaService],
   controllers: [TicketsController],
 })
 export class AppModule {}

@@ -1,7 +1,7 @@
 import { Injectable } from "@nestjs/common";
-import { Sequelize } from "sequelize-typescript";
+import { PrismaService } from "./prisma.service";
 
 @Injectable()
 export class AppService {
-  constructor(private sequelize: Sequelize) {}
+  constructor(private readonly prisma: PrismaService) {}
 }
